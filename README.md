@@ -1,8 +1,8 @@
 
 # Online Learning Platform
 
-Online Learning Platform using MERN Stack
-
+Online Learning Platform using MERN Stack,
+Please visit [here](https://code2tutorial.com/tutorial/55a23a94-6cb7-4c48-92c1-f96db207f791/index.md) for a better understanding of the project.
 ## Objective:
 
 Develop a comprehensive online learning platform with three user types (Student, Teacher, Admin), featuring course creation, approval process, and live video conferencing.

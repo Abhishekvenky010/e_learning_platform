@@ -107,20 +107,22 @@ function AddClass({ onClose }) {
         });
 
         const res = await response.json();
-        alert(res.message);
-
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          // Show the backend error message
+          alert(res.message || 'Failed to add class');
+          throw new Error(res.message || 'Failed to add class');
         }
 
+        alert(res.message || 'Class added successfully');
         
-        
-
-        if (res.statusCode === 200) {
+        if (res.statusCode === 200 || response.status === 200) {
           onClose();
         }
       } catch (error) {
+        console.error('Error adding class:', error);
         setError(error.message);
+        alert(error.message || 'Failed to add class. Please check the console for details.');
       }
     }
   };

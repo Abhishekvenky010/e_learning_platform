@@ -29,6 +29,7 @@ function StudentDashboard() {
       try {
         const response = await fetch(`/api/Student/StudentDocument/${ID}`, {
           method: 'GET',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           }

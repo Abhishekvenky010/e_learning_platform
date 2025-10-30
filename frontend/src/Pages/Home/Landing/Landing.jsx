@@ -103,7 +103,7 @@ function Landing() {
             <h4>High Quality Live Class</h4>
             <p>
               We deliver high-quality live classes to our students, providing
-              interactive learning experiences led by experienced instructors.{" "}
+              interactive learning experiences led by experienced instructors.
             </p>
           </div>
 
@@ -127,8 +127,8 @@ function Landing() {
             <div className="flex gap-5 items-center my-5">
               <img src="https://lh3.googleusercontent.com/kq1PrZ8Kh1Pomlbfq4JM1Gx4z-oVr3HG9TEKzwZfqPLP3TdVYrx0QrIbpR-NmMwgDzhNTgi3FzuzseMpjzkfNrdHK5AzWGZl_RtKB80S-GZmWOQciR9s=w1296-v1-e30" alt="" width={300}/>
               <div className="text-white flex flex-col items-center">
-                <h1>High Quality Live Class</h1>
-                <p>We deliver high-quality live classes to our students,<br /> providing interactive learning experiences <br />led by experienced instructors.</p>
+                <div className="text-2xl font-semibold">High Quality Live Class</div>
+                <div>We deliver high-quality live classes to our students,<br /> providing interactive learning experiences <br />led by experienced instructors.</div>
               </div>
             </div>
           </div>
@@ -228,11 +228,11 @@ function Landing() {
             </div>
             </div>
             { fac.enrolledteacher.Email === "urttsg@gmail.com" ?
-              <h4><span className="font-bold text-brown-800">Education :</span> Post graduate from Calcutta University</h4> 
+              <div><span className="font-bold text-brown-800">Education :</span> Post graduate from Calcutta University</div>
               : 
-              <h4><span className="font-bold text-brown-800">Education :</span> Post graduate from Sister Nivedita university</h4>
+              <div><span className="font-bold text-brown-800">Education :</span> Post graduate from Sister Nivedita university</div>
             }
-            { fac.enrolledteacher.Email === "urttsg@gmail.com" ? <h4>1 years of teaching experience</h4> : <h4>2 years of teaching experience</h4>}
+            { fac.enrolledteacher.Email === "urttsg@gmail.com" ? <div>1 years of teaching experience</div> : <div>2 years of teaching experience</div>}
           </div>
         )))}
       </div>
@@ -247,13 +247,13 @@ function Landing() {
           <div className="left-svg">
             <img src={Plant2} width={300} alt="" />
           </div>
-          <p>
+          <div>
             At Shiksharthee, we believe in the power of education to transform lives. Our platform is designed to be a gateway to knowledge, offering a diverse range of courses and learning experiences for students.
-            <h1 className=" bg-blue-700 w-fit py-1 px-3 rounded-sm my-2">Our Story</h1>
+            <div className=" bg-blue-700 w-fit py-1 px-3 rounded-sm my-2">Our Story</div>
             Shiksharthee was born out of a passion for learning and a desire to make quality education accessible to everyone. We understand the challenges faced by modern learners and strive to provide a solution that is both convenient and effective.
-            <h1 className=" bg-blue-700 w-fit py-1 px-3 rounded-sm my-2">Our Mission</h1>
+            <div className=" bg-blue-700 w-fit py-1 px-3 rounded-sm my-2">Our Mission</div>
             Our mission is simple yet profound: to empower individuals through education. We aim to create a global learning community where students can discover new passions, enhance their skills, and achieve their academic and professional goals. By leveraging technology and innovative teaching methods, we strive to make learning engaging, interactive, and enjoyable.
-          </p>
+          </div>
           <div className="right-svg">
             <img src={Plant} width={400} alt="" />
           </div>

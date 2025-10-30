@@ -2,73 +2,25 @@ import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js";
 import {student, studentdocs} from "../models/student.model.js";
 import {ApiResponse} from "../utils/ApiResponse.js";
-import nodemailer from "nodemailer";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Teacher } from "../models/teacher.model.js";
-import { Sendmail } from "../utils/Nodemailer.js";
 
 
 
-const verifyEmail = async (Email, Firstname, createdStudent_id) => {
-    try {
-        const emailsender = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-                user: process.env.SMTP_EMAIL,
-                pass: process.env.SMTP_PASS,
-            }
-        });
-        // const mailOptions = {
-        //     from: "elearningsnu@gmail.com",
-        //     to: Email,
-        //     subject: "Verify your E-mail",
-        //     html: `<p> Hi ${Firstname}, Please click here to <a href="http://localhost:4400/api/student/verify?id=${createdStudent_id}">verify</a> your E-mail. </p>`
-        // };
-
-        const mailOptions = {
-            from: "elearningsnu@gmail.com",
-            to: Email,
-            subject: "Verify your E-mail",
-            html: `
-            <div style="text-align: center;">
-                <p style="margin: 20px;"> Hi ${Firstname}, Please click the button below to verify your E-mail. </p>
-                <img src="https://img.freepik.com/free-vector/illustration-e-mail-protection-concept-e-mail-envelope-with-file-document-attach-file-system-security-approved_1150-41788.jpg?size=626&ext=jpg&uid=R140292450&ga=GA1.1.553867909.1706200225&semt=ais" alt="Verification Image" style="width: 100%; height: auto;">
-                <br>
-                <a href="http://localhost:4400/api/student/verify?id=${createdStudent_id}">
-                    <button style="background-color: black; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 10px 0; cursor: pointer;">Verify Email</button>
-                </a>
-            </div>`
-        };
-
-        emailsender.sendMail(mailOptions, function(error) {
-            if (error) {
-                throw new ApiError(400, "Sending email verification failed");
-            } else {
-                console.log("Verification mail sent successfully");
-            }
-        });
-    } catch (error) {
-        throw new ApiError(400, "Failed to send email verification");
-    }
-};
 
 const generateAccessAndRefreshTokens = async (stdID) =>{ 
     try {
-        
         const std = await student.findById(stdID)
-        
+        if(!std){
+            throw new Error('Student not found for token generation')
+        }
         const Accesstoken = std.generateAccessToken()
         const Refreshtoken = std.generateRefreshToken()
-
         std.Refreshtoken = Refreshtoken
         await std.save({validateBeforeSave:false})
-
         return{Accesstoken, Refreshtoken}
-
     } catch (error) {
+        console.error('Token generation error:', error)
         throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
 }
@@ -107,6 +59,7 @@ const signup = asyncHandler(async (req, res) =>{
         Firstname,
         Lastname,
         Password,
+        Isverified: true, // Set as verified by default
         Studentdetails:null,
 
     })
@@ -119,8 +72,6 @@ const signup = asyncHandler(async (req, res) =>{
         throw new ApiError(501, "Student registration failed")
     }
     
-
-    await verifyEmail(Email, Firstname, newStudent._id);
 
     return res.status(200).json(
         new ApiResponse(200, createdStudent, "Signup successfull")
@@ -172,7 +123,7 @@ const login = asyncHandler(async(req,res) => {
     const StdPassCheck = await StdLogin.isPasswordCorrect(Password)
 
     if(!StdPassCheck){
-        throw new ApiError(403,"Password is incorrect",)
+        throw new ApiError(403,"Password is incorrect")
     }
 
     const tempStd = StdLogin._id
@@ -182,9 +133,11 @@ const login = asyncHandler(async(req,res) => {
 
     const loggedInStd = await student.findById(tempStd).select("-Password -Refreshtoken")
 
+    const isProd = process.env.NODE_ENV === 'production'
     const options = {
-        httpOnly:true,
-        secure:true,
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax'
     }
 
     return res
@@ -213,9 +166,11 @@ const logout = asyncHandler(async(req,res)=>{
             new:true
         }
     )
+    const isProd = process.env.NODE_ENV === 'production'
     const options ={
-        httpOnly:true,
-        secure:true,
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax'
     }
 
     return res
@@ -339,20 +294,12 @@ const forgetPassword=asyncHandler(async(req,res)=>{
    <p>Best regards,</p>
    <p>The Shiksharthee Team</p>`
 
-   try{
-    
-    await Sendmail(Email,subject,message);
-
-    res.status(200).json({
-
-        success:true,
-        message:`Reset password Email has been sent to ${Email} the email SuccessFully`
-     })
-
-    }catch(error){
-
-        throw new ApiError(404,"operation failed!!");
-    }
+   // Since we removed nodemailer, we'll just return a success message
+   // In a real application, you might want to implement alternative password reset methods
+   res.status(200).json({
+       success: true,
+       message: `Password reset functionality is temporarily disabled. Please contact support for assistance.`
+   })
 
 
 })

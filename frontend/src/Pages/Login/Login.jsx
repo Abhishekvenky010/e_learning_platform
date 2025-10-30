@@ -123,10 +123,7 @@ export default function Login() {
     <Header/>
     <section className="main">
       <div className="container">
-        {/* <div className="logo">
-          <img src="" alt="" />
-          <h1 className="head">Logo</h1>
-        </div> */}
+        {/* Logo removed to avoid empty src warnings */}
         {/* headings */}
         <div className="para1">
           <h2> WELCOME BACK!</h2>

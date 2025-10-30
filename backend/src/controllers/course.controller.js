@@ -3,7 +3,6 @@ import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"; 
 import {ApiResponse} from "../utils/ApiResponse.js";
 import { Teacher } from "../models/teacher.model.js";
-import {Sendmail} from "../utils/Nodemailer.js"
 
 
 const getCourse = asyncHandler(async(req,res)=>{
@@ -217,19 +216,8 @@ const addCourseStudent = asyncHandler(async(req,res)=>{
       new: true
   })
 
-  await Sendmail(loggedStudent.Email, `Payment Confirmation for Course Purchase`, 
-    `<html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h1 style="color: #4CAF50; text-align: center;">Payment Successful!</h1>
-        <p style="font-size: 16px; text-align: center;">Dear ${loggedStudent.Firstname},</p>
-        <p style="font-size: 16px; text-align: center;">We are pleased to inform you that your payment for the course has been successfully processed.</p>
-         <p style="font-size: 16px;">You can start accessing the course immediately by logging into your account.</p>
-        <p style="font-size: 16px;">Best regards,</p>
-        <p style="font-size: 16px;"><strong>The Shiksharthee Team</strong></p>
-        <p style="font-size: 14px;">&copy; 2024 Shiksharthee. All rights reserved.</p>
-        </body>
-    </html>`
-  )
+  // Email notification disabled - nodemailer removed
+  console.log(`Payment confirmation for ${loggedStudent.Email}: Course purchase successful`)
 
   return res
   .status(200)
@@ -306,7 +294,17 @@ const addClass = asyncHandler(async(req,res) => {
   
 
   if(!enrolledTeacher){
-  throw new ApiError(400, "not authorized")
+    const courseExists = await course.findOne({ _id: courseId });
+    if (!courseExists) {
+      throw new ApiError(400, "Course not found");
+    }
+    if (courseExists.enrolledteacher.toString() !== teacherId) {
+      throw new ApiError(400, "You are not authorized to add classes to this course");
+    }
+    if (courseExists.isapproved !== true) {
+      throw new ApiError(400, "Course is not approved yet. Please wait for admin approval");
+    }
+    throw new ApiError(400, "not authorized")
   }
 
   const cst = timing - 60;

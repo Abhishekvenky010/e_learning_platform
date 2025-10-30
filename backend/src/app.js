@@ -5,7 +5,10 @@ import Razorpay from "razorpay"
 
 const app = express();
 
-app.use(cors())
+app.use(cors({
+    origin: true,
+    credentials: true
+}))
 
 app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
@@ -14,8 +17,8 @@ app.use(cookieParser())
 
 
 export const instance = new Razorpay({
-    key_id: process.env.KEY_ID,
-    key_secret: process.env.KEY_SECRET
+    key_id: 'rzp_test_RF9SjzagOd3VcP',
+    key_secret: 'GgU74Hl22BTPKDt4XGbBCEb3'
 })
 
 //student routes

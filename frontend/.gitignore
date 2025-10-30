@@ -22,3 +22,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Deployment/platform artifacts
+.vercel
+.netlify
+.turbo
+
+# Testing/coverage
+coverage
+.vitest
+
+# OS
+Thumbs.db
